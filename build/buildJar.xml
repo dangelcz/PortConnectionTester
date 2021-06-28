@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="build" name="Create Runnable Jar">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+	<!--define folder properties-->
+	<property name="dir.buildfile" value="." />
+	<property name="dir.workspace" value="${dir.buildfile}/.." />
+	<property name="dir.jarfile" value="${dir.buildfile}" />
+	<property name="jarfile" value="${dir.jarfile}/PCT.jar" />
+
+	<target name="clean">
+		<delete file="${jarfile}" />
+	</target>
+
+	<target name="build" depends="clean">
+		<jar destfile="${jarfile}" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="launch.AppLauncher" />
+				<attribute name="Class-Path" value="${mainclass}" />
+				<attribute name="Built-By" value="pavelekd" />
+			</manifest>
+			<fileset dir="${dir.jarfile}/bin">
+				<exclude name="tests/**" />
+			</fileset>
+		</jar>
+	</target>
+
+</project>

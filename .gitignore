@@ -1,0 +1,9 @@
+*.*
+!*.java
+!*.jar
+!.gitignore
+!.classpath
+!.project
+
+!build/*
+PCT.jar
