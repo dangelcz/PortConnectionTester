@@ -43,7 +43,7 @@ public class UdpConnectionTester extends AConnectionTesterWorker
 
 		} catch (Exception e)
 		{
-			//System.err.println("UDP ERR: " + e.getLocalizedMessage());
+			//System.err.println("UDP" + serverPort + " ERR: " + e.getLocalizedMessage());
 			return false;
 		}
 	}

@@ -6,7 +6,7 @@
 	<property name="dir.buildfile" value="." />
 	<property name="dir.workspace" value="${dir.buildfile}/.." />
 	<property name="dir.jarfile" value="${dir.buildfile}" />
-	<property name="jarfile" value="${dir.jarfile}/PCT.jar" />
+	<property name="jarfile" value="${dir.jarfile}/pct.jar" />
 
 	<target name="clean">
 		<delete file="${jarfile}" />

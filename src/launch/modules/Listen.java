@@ -1,5 +1,6 @@
 package launch.modules;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -10,6 +11,9 @@ import launch.AppLauncher;
 import launch.annotation.RunModule;
 import launch.exceptions.ValidationException;
 import libs.GeneralHelper;
+import logic.network.client.AConnectionTesterWorker;
+import logic.network.client.TcpConnectionTester;
+import logic.network.client.UdpConnectionTester;
 import logic.network.server.TcpServer;
 import logic.network.server.UdpServer;
 
@@ -54,13 +58,23 @@ public class Listen extends ARunModule
 			udpPorts = ports1;
 		}
 
-		// TODO
-
-		// TcpServer s = new TcpServer(8888);
-		// s.run();
-
-		UdpServer u = new UdpServer(8889);
-		u.run();
+		// start the port listeners
+		List<Thread> workers = new ArrayList<>();
+		tcpPorts.forEach(i -> workers.add(new Thread(new TcpServer(i))));
+		udpPorts.forEach(i -> workers.add(new Thread(new UdpServer(i))));
+		
+		System.out.println("Starting listeners ... ");
+		workers.forEach(t -> t.start());
+		System.out.println("Listeners started ... ");
+		workers.forEach(t -> {
+			try
+			{
+				t.join();
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@Override

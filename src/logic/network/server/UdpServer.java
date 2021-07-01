@@ -26,10 +26,10 @@ public class UdpServer implements Runnable
 				datagramSocket.receive(clientPacket);
 
 				InetAddress clientAddress = clientPacket.getAddress();
-				System.out.println("Client from: " + clientAddress.getHostAddress());
+				System.out.println("Client from: " + clientAddress.getHostAddress() + " on UDP " + port);
 
-				String message = new String(buffer);
-				System.out.println("Message Received: " + message);
+				//String message = new String(buffer);
+				//System.out.println("Message Received: " + message);
 				
 				datagramSocket.send(clientPacket);
 			}

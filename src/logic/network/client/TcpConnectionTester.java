@@ -43,7 +43,7 @@ public class TcpConnectionTester extends AConnectionTesterWorker
 
 		} catch (Exception e)
 		{
-			//System.err.println("TCP ERR: " + e.getLocalizedMessage());
+			//System.err.println("TCP " + serverPort + " ERR: " + e.getLocalizedMessage());
 			return false;
 		}
 	}

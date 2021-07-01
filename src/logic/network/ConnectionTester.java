@@ -1,9 +1,9 @@
 package logic.network;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -16,30 +16,37 @@ public class ConnectionTester
 {
 	private static final int WORKERS_COUNT = 10;
 	private String ip;
-	private Map<Integer, Boolean> tcpPorts;
-	private Map<Integer, Boolean> udpPorts;
+	private Map<Integer, Boolean> tcpResults;
+	private Map<Integer, Boolean> udpResults;
 	private List<AConnectionTesterWorker> workers;
 
 	public ConnectionTester(String ip, List<Integer> tcpPorts, List<Integer> udpPorts)
 	{
 		this.ip = ip;
-		this.tcpPorts = new HashMap<>();
-		this.udpPorts = new HashMap<>();
+		this.tcpResults = new TreeMap<>();
+		this.udpResults = new TreeMap<>();
 		this.workers = new ArrayList<>();
 
-		tcpPorts.forEach(i -> workers.add(new TcpConnectionTester(ip, i, this)));
-		udpPorts.forEach(i -> workers.add(new UdpConnectionTester(ip, i, this)));
+		if (tcpPorts != null)
+		{
+			tcpPorts.forEach(i -> workers.add(new TcpConnectionTester(ip, i, this)));
+		}
+
+		if (udpPorts != null)
+		{
+			udpPorts.forEach(i -> workers.add(new UdpConnectionTester(ip, i, this)));
+		}
 	}
 
-	public void saveResult(Protocol protocol, int serverPort, boolean connectionResult)
+	public synchronized void saveResult(Protocol protocol, int serverPort, boolean connectionResult)
 	{
 		switch (protocol)
 		{
 			case TCP:
-				this.tcpPorts.put(serverPort, connectionResult);
+				this.tcpResults.put(serverPort, connectionResult);
 				break;
 			case UDP:
-				this.udpPorts.put(serverPort, connectionResult);
+				this.udpResults.put(serverPort, connectionResult);
 				break;
 		}
 	}
@@ -52,9 +59,10 @@ public class ConnectionTester
 
 		try
 		{
-			while (!pool.awaitTermination(60, TimeUnit.SECONDS))
+			while (!pool.awaitTermination(60, TimeUnit.SECONDS) && !gotAllResults())
 			{
 				System.out.println("Waiting for tasks to complete ... ");
+				Thread.sleep(1000);
 			}
 
 		} catch (InterruptedException e)
@@ -64,6 +72,11 @@ public class ConnectionTester
 		}
 	}
 
+	private boolean gotAllResults()
+	{
+		return (tcpResults.size() + udpResults.size()) == workers.size();
+	}
+
 	public void printResults()
 	{
 		System.out.println("---------------------");
@@ -71,19 +84,19 @@ public class ConnectionTester
 		System.out.println("---------------------");
 		System.out.println();
 
-		if (!tcpPorts.isEmpty())
+		if (!tcpResults.isEmpty())
 		{
 			System.out.println("TCP Ports");
 			System.out.println("=============");
-			tcpPorts.forEach((i, b) -> System.out.println(i + ": " + (b ? "OK" : "FAILED")));
+			tcpResults.forEach((i, b) -> System.out.println(i + ": " + (b ? "OK" : "FAILED")));
 			System.out.println();
 		}
 
-		if (!udpPorts.isEmpty())
+		if (!udpResults.isEmpty())
 		{
 			System.out.println("UDP Ports");
 			System.out.println("=============");
-			udpPorts.forEach((i, b) -> System.out.println(i + ": " + (b ? "OK" : "FAILED")));
+			udpResults.forEach((i, b) -> System.out.println(i + ": " + (b ? "OK" : "FAILED")));
 		}
 	}
 }

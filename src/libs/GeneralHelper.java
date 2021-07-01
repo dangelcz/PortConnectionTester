@@ -368,7 +368,7 @@ public class GeneralHelper
 					{
 						return null;
 					}
-					
+
 					for (int port = startPort; port <= endPort; port++)
 					{
 						ports.add(port);
@@ -384,5 +384,10 @@ public class GeneralHelper
 		}
 
 		return ports;
+	}
+
+	public static boolean nullOrEmpty(List<?> list)
+	{
+		return list == null || list.isEmpty();
 	}
 }

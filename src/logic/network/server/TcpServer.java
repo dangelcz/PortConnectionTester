@@ -25,12 +25,13 @@ public class TcpServer implements Runnable
 			{
 				Socket clientSocket = serverSocket.accept();
 				InetAddress clientAddress = clientSocket.getInetAddress();
-				System.out.println("Client from: " + clientAddress.getHostAddress());
+
+				System.out.println("Client from: " + clientAddress.getHostAddress() + " on TCP " + port);
 
 				ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
 				String message = (String) ois.readObject();
-				System.out.println("Message Received: " + message);
-				
+				// System.out.println("Message Received: " + message);
+
 				ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 				oos.writeObject(message);
 

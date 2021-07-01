@@ -34,6 +34,11 @@ public class Connect extends ARunModule
 		String strPorts1 = getArgument(args, 3);
 		List<Integer> ports1 = GeneralHelper.parsePortsString(strPorts1, AppConfig.MAX_PORTS);
 
+		if (GeneralHelper.nullOrEmpty(ports1))
+		{
+			throw new ValidationException("Invalid ports for " + protocol1);
+		}
+		
 		String protocol2 = null;
 		String strPorts2 = null;
 		List<Integer> ports2 = null;
@@ -43,6 +48,11 @@ public class Connect extends ARunModule
 			protocol2 = getArgument(args, 4);
 			strPorts2 = getArgument(args, 5);
 			ports2 = GeneralHelper.parsePortsString(strPorts2, AppConfig.MAX_PORTS);
+
+			if (GeneralHelper.nullOrEmpty(ports2))
+			{
+				throw new ValidationException("Invalid ports for " + protocol2);
+			}
 		}
 
 		List<Integer> tcpPorts = null;
@@ -66,7 +76,9 @@ public class Connect extends ARunModule
 	@Override
 	public String getHelpDescription()
 	{
-		return "Example: connect 127.0.0.1 upd 80,8080,10020-10030. Ports must be delimited by comma or dash for interval";
+		return "Example: connect 127.0.0.1 upd 80,8080,10020-10030.\n"
+				+ "Ports must be delimited by comma or dash for interval.\n"
+				+ "Maximum ports count is " + AppConfig.MAX_PORTS;
 	}
 
 	@Override
