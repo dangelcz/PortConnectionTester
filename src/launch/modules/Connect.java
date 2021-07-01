@@ -58,7 +58,7 @@ public class Connect extends ARunModule
 			udpPorts = ports1;
 		}
 
-		ConnectionTester tester = ConnectionTester.getTester(ip, tcpPorts, udpPorts);
+		ConnectionTester tester = new ConnectionTester(ip, tcpPorts, udpPorts);
 		tester.performTests();
 		tester.printResults();
 	}
