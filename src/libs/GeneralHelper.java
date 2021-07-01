@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -341,4 +342,47 @@ public class GeneralHelper
 		}
 	}
 
+	public static List<Integer> parsePortsString(String portsString, int maxPorts)
+	{
+		List<Integer> ports = new ArrayList<>();
+		String[] parts = portsString.replace(" ", "").trim().split(",");
+
+		if (parts.length > maxPorts)
+		{
+			return null;
+		}
+
+		for (String part : parts)
+		{
+			if (part.contains("-"))
+			{
+				String[] parts2 = part.split("-");
+				if (parts2.length == 2)
+				{
+					int startPort = Integer.parseInt(parts2[0]);
+					int endPort = Integer.parseInt(parts2[1]);
+
+					int count = endPort - startPort;
+
+					if (count <= 0 || count > maxPorts)
+					{
+						return null;
+					}
+					
+					for (int port = startPort; port <= endPort; port++)
+					{
+						ports.add(port);
+					}
+				} else
+				{
+					return null;
+				}
+			} else
+			{
+				ports.add(Integer.parseInt(part));
+			}
+		}
+
+		return ports;
+	}
 }
