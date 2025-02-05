@@ -60,9 +60,17 @@ public class Listen extends ARunModule
 
 		// start the port listeners
 		List<Thread> workers = new ArrayList<>();
-		tcpPorts.forEach(i -> workers.add(new Thread(new TcpServer(i))));
-		udpPorts.forEach(i -> workers.add(new Thread(new UdpServer(i))));
-		
+
+		if (tcpPorts != null)
+		{
+			tcpPorts.forEach(i -> workers.add(new Thread(new TcpServer(i))));
+		}
+
+		if (udpPorts != null)
+		{
+			udpPorts.forEach(i -> workers.add(new Thread(new UdpServer(i))));
+		}
+
 		System.out.println("Starting listeners ... ");
 		workers.forEach(t -> t.start());
 		System.out.println("Listeners started ... ");
@@ -80,18 +88,20 @@ public class Listen extends ARunModule
 	@Override
 	public String getHelpDescription()
 	{
-		return "Example: listen upd 80,8080,10020-10030. Ports must be delimited by comma or dash for interval";
+		return "Example: listen upd 10020-10030 tcp 80,8080\n"
+				+ "This will listen on all UDP port between 10020 to 10030 and TCP 80 + 8080.\n"
+				+ "Ports must be delimited by comma or dash for interval";
 	}
 
 	@Override
 	public String getRequiredParameters()
 	{
-		return "any";
+		return "first_protocol_name protocol_ports";
 	}
 
 	@Override
 	public String getOptionalParameters()
 	{
-		return "any";
+		return "second_protocol_name protocol_ports";
 	}
 }

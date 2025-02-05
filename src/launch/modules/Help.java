@@ -18,7 +18,7 @@ public class Help extends ARunModule
 	{
 		modules = AppLauncher.getModules();
 
-		System.out.println("Scriptator " + AppConfig.APP_VERSION + " syntax:");
+		System.out.println("PortConnectionTester " + AppConfig.APP_VERSION + " syntax:");
 		System.out.println("<command> <required parameter> (optional parameter) ...");
 		System.out.println();
 

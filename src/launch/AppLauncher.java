@@ -74,7 +74,7 @@ public class AppLauncher
 			module.run(args);
 		} catch (ValidationException e)
 		{
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 			System.out.println();
 			module.printModuleHelp();
 		}
